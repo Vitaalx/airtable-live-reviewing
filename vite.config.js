@@ -3,7 +3,9 @@ import vue from '@vitejs/plugin-vue'
 
 const envFileKeys = [
   "AIRTABLE_API_KEY",
-  "AIRTABLE_BASE_ID"
+  "AIRTABLE_BASE_ID",
+  "JWT_KEY",
+  "JWT_TIME"
 ];
 
 // https://vite.dev/config/
@@ -15,6 +17,8 @@ export default defineConfig(({ mode }) => {
     define: {
       'process.env': processEnv
     },
-    plugins: [vue()],
+    plugins: [
+      vue(),
+    ]
   }
 })

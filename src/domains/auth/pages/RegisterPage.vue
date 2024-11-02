@@ -3,6 +3,9 @@ import { reactive } from 'vue';
 import bcrypt from 'bcryptjs';
 import AirtableBase from '../../../providers/airtable';
 import { z, ZodIssue } from 'zod';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const registrationSchema = z.object({
   lastName: z.string().min(3, { message: "Le nom de famille doit contenir au minimum 3 caratères." }),
@@ -55,10 +58,16 @@ async function register() {
     return;
   }
 
-  createUser(user);
+  const isCreated = await createUser(user);
+  if (isCreated) {
+    router.push({ path: "/login" });
+  } else {
+    console.log("Error while creating user");
+  }
+
 }
 
-  async function createUser(user: UserRegisterDto) {
+  async function createUser(user: UserRegisterDto): Promise<boolean> {
     try {
       const { lastName, firstName, email, password } = user;
       const salt = await bcrypt.genSalt(10);
@@ -78,15 +87,17 @@ async function register() {
             }
           }
       );
+      return true;
     } catch (err) {
       console.error(err);
+      return false;
     }
   }
 </script>
 <template>
-    <section class="h-screen-nh flex justify-center items-center container">
+    <section class="container flex items-center justify-center h-screen-nh">
       <div class="flex items-center justify-center py-12">
-        <div class="mx-auto grid w-96 gap-6 p-6 bg-white rounded-md shadow-md">
+        <div class="grid gap-6 p-6 mx-auto bg-white rounded-md shadow-md w-96">
           <div class="grid gap-2 text-center">
 						<h1 class="text-3xl font-bold">
 							Inscription
@@ -97,7 +108,7 @@ async function register() {
 						</p>
 					</div>
           
-          <div class="flex gap-2 flex-col items-center">
+          <div class="flex flex-col items-center gap-2">
             <div class="w-full">
               <input v-model="user.lastName" class="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Nom" required/>
               
@@ -122,7 +133,7 @@ async function register() {
               <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[3].message }}</span>
             </div>
             
-            <button @click="register" class="w-full p-2 bg-blue-500 text-white rounded-md">S'inscrire</button>
+            <button @click="register" class="w-full p-2 text-white bg-blue-500 rounded-md">S'inscrire</button>
           </div>
         </div>
       </div>

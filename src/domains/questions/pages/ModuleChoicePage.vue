@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { z } from 'zod';
+
+const router = useRouter();
 
 const moduleSchema = z.object({
   name: z.string(),
@@ -23,25 +26,25 @@ async function validate() {
     return;
   }
 
-  console.log(module);  
+  router.push({ path: `/unanswered-questions/${module.name}` });
 }
 </script>
 
 <template>
-  <section class="h-screen-nh flex justify-center items-center container">
-    <div class="mx-auto grid w-96 gap-6 p-6 bg-white rounded-md shadow-md">
+  <section class="container flex items-center justify-center h-screen-nh">
+    <div class="grid gap-6 p-6 mx-auto bg-white rounded-md shadow-md w-96">
       <div class="grid gap-2 text-center">
         <h1 class="text-3xl font-bold">
           Choisissez un module
         </h1>
       </div>
 
-      <div class="flex gap-2 flex-col items-center">
+      <div class="flex flex-col items-center gap-2">
         <select class="w-full p-2 mt-4 border border-gray-300 rounded-md" v-model="selectedModule" required>
           <option v-for="(module, index) in modules" :value="module.name" :key="index">{{ module.name }}</option>
         </select>
         
-        <button @click="validate" class="w-full p-2 bg-blue-500 text-white rounded-md">Valider</button>
+        <button @click="validate" class="w-full p-2 text-white bg-blue-500 rounded-md">Valider</button>
       </div>
     </div>
   </section>
