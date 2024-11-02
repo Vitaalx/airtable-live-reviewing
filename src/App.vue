@@ -1,16 +1,14 @@
 <script setup>
-import { useGetUsers } from './composables/users';
-
-const { getUsers } = useGetUsers();
-
-//Test
-getUsers();
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <div>
-    <h1 class="text-blue-600 text-center text-4xl">Live reviewing - Airtable</h1>
-  </div>
+  <div
+		ref="container"
+		class="w-full h-full overflow-auto"
+	>
+		<RouterView />
+	</div>
 </template>
 
 <style scoped>
