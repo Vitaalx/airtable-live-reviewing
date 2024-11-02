@@ -5,7 +5,7 @@ import { z, ZodIssue } from 'zod';
 import AirtableBase from '../../../providers/airtable';
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "L'adresse mail est invalide." }),
+  email: z.string().email({ message: "L'adresse email est invalide." }),
   password: z.string().min(8, { message: "Le mot de passe doit contenir au minimum 8 caratères." })
 });
 
@@ -24,9 +24,7 @@ async function login() {
   console.log(user);
   if (!validationResult.success) {
     formErrors.push(...validationResult.error.issues);
-    setTimeout(() => {
-      formErrors.splice(0, formErrors.length);
-    }, 5000);
+
     return;
   }
 
@@ -40,7 +38,6 @@ async function login() {
   if (records.length > 0) {
     const record = records[0];
     const hashedPassword = record.get("Password") as string;
-
     const isPasswordValid = await bcrypt.compare(user.password, hashedPassword);
 
     if (isPasswordValid) {
@@ -56,16 +53,30 @@ async function login() {
 
 </script>
 <template>
-    <div class="flex flex-col items-center">
-        <label for="email">Email</label>
-        <input v-model="user.email" type="email" id="email" />
-        <label for="password">Password</label>
-        <input v-model="user.password" type="password" id="password" />
-        <button @click="login">Login</button>
-        <div v-if="formErrors.length > 0">
-            <ul>
-                <li v-for="error in formErrors" :key="error.message">{{ error.message }}</li>
-            </ul>
+    <section class="h-screen-nh flex justify-center items-center container">
+      <div class="flex items-center justify-center py-12">
+        <div class="mx-auto grid w-96 gap-6 p-6 bg-white rounded-md shadow-md">
+          <div class="grid gap-2 text-center">
+						<h1 class="text-3xl font-bold">
+							Connexion
+						</h1>
+
+						<p class="text-balance text-muted-foreground">
+							Connectez-vous à votre compte.
+						</p>
+					</div>
+          <div class="flex gap-2 flex-col items-center">
+            <div class="w-full">
+              <input v-model="user.email" class="w-full p-2 border border-gray-300 rounded-md" type="email" placeholder="Email" required/>
+              <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[2].message }}</span>
+            </div>
+            <div class="w-full">
+              <input v-model="user.password" class="w-full p-2 border border-gray-300 rounded-md" type="password" placeholder="Mot de passe" required/>
+              <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[3].message }}</span>
+            </div>
+            <button @click="login" class="w-full p-2 bg-blue-500 text-white rounded-md">S'inscrire</button>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
 </template>

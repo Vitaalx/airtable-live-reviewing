@@ -5,7 +5,21 @@ export default {
     "./src/**/*.{vue,js,ts}",
   ],
   theme: {
-    extend: {},
+    container: {
+			center: true,
+			padding: "2rem",
+			screens: {
+				"2xl": "1400px",
+			},
+		},
+    extend: {
+      height: {
+				"screen-nh": "calc(100vh - 6rem)", // screen - header
+			},
+			minHeight: {
+				"screen-nh": "calc(100vh - 6rem)", // screen - header
+			},
+    },
   },
   plugins: [],
 }

@@ -7,7 +7,7 @@ import { z, ZodIssue } from 'zod';
 const registrationSchema = z.object({
   lastName: z.string().min(3, { message: "Le nom de famille doit contenir au minimum 3 caratères." }),
   firstName: z.string().min(3 , { message: "Le prénom doit contenir au minimum 3 caratères." }),
-  email: z.string().email({ message: "L'adresse mail est invalide." }),  
+  email: z.string().email({ message: "L'adresse email est invalide." }),  
   password: z.string().min(8, { message: "Le mot de passe doit contenir au minimum 8 caratères." })
 });
 
@@ -30,11 +30,13 @@ async function checkUserExistByMail(email: UserRegisterDto["email"]): Promise<bo
 
     if (records.length > 0) {
       console.log("User email already exists");
+
       return true;
     }
   } catch (err) {
     console.error(err);
   }
+
   return false;
 }
 
@@ -43,9 +45,7 @@ async function register() {
 
   if (!validationResult.success) {
     formErrors.push(...validationResult.error.issues);
-    setTimeout(() => {
-      formErrors.splice(0, formErrors.length);
-    }, 5000);
+
     return;
   }
 
@@ -61,7 +61,6 @@ async function register() {
   async function createUser(user: UserRegisterDto) {
     try {
       const { lastName, firstName, email, password } = user;
-
       const salt = await bcrypt.genSalt(10);
       const hashedPassword: string = await bcrypt.hash(password, salt);
 
@@ -85,14 +84,38 @@ async function register() {
   }
 </script>
 <template>
-    <div class="flex flex-col items-center">
-      <input v-model="user.lastName" type="text" placeholder="Lastname" required/>
-      <input v-model="user.firstName" type="text" placeholder="Firstname" required/>
-      <input v-model="user.email" type="email" placeholder="Email" required/>
-      <input v-model="user.password" type="password" placeholder="Password" required/>
-      <button @click="register">Register</button>
-      <ul>
-        <li class="text-sm text-red-500" v-for="error of formErrors">{{ error.message }}</li>
-      </ul>
-    </div>
+    <section class="h-screen-nh flex justify-center items-center container">
+      <div class="flex items-center justify-center py-12">
+        <div class="mx-auto grid w-96 gap-6 p-6 bg-white rounded-md shadow-md">
+          <div class="grid gap-2 text-center">
+						<h1 class="text-3xl font-bold">
+							Inscription
+						</h1>
+
+						<p class="text-balance text-muted-foreground">
+							Créez un compte pour accéder à la plateforme.
+						</p>
+					</div>
+          <div class="flex gap-2 flex-col items-center">
+            <div class="w-full">
+              <input v-model="user.lastName" class="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Nom" required/>
+              <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[0].message }}</span>
+            </div>
+            <div class="w-full">
+              <input v-model="user.firstName" class="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Prénom" required/>
+              <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[1].message }}</span>
+            </div>
+            <div class="w-full">
+              <input v-model="user.email" class="w-full p-2 border border-gray-300 rounded-md" type="email" placeholder="Email" required/>
+              <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[2].message }}</span>
+            </div>
+            <div class="w-full">
+              <input v-model="user.password" class="w-full p-2 border border-gray-300 rounded-md" type="password" placeholder="Mot de passe" required/>
+              <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[3].message }}</span>
+            </div>
+            <button @click="register" class="w-full p-2 bg-blue-500 text-white rounded-md">S'inscrire</button>
+          </div>
+        </div>
+      </div>
+    </section>
 </template>
