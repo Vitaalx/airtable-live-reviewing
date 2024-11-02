@@ -96,23 +96,32 @@ async function register() {
 							Créez un compte pour accéder à la plateforme.
 						</p>
 					</div>
+          
           <div class="flex gap-2 flex-col items-center">
             <div class="w-full">
               <input v-model="user.lastName" class="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Nom" required/>
+              
               <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[0].message }}</span>
             </div>
+            
             <div class="w-full">
               <input v-model="user.firstName" class="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Prénom" required/>
+              
               <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[1].message }}</span>
             </div>
+            
             <div class="w-full">
               <input v-model="user.email" class="w-full p-2 border border-gray-300 rounded-md" type="email" placeholder="Email" required/>
+              
               <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[2].message }}</span>
             </div>
+            
             <div class="w-full">
               <input v-model="user.password" class="w-full p-2 border border-gray-300 rounded-md" type="password" placeholder="Mot de passe" required/>
+              
               <span class="text-sm text-red-500" v-if="formErrors.length > 0">{{ formErrors[3].message }}</span>
             </div>
+            
             <button @click="register" class="w-full p-2 bg-blue-500 text-white rounded-md">S'inscrire</button>
           </div>
         </div>
