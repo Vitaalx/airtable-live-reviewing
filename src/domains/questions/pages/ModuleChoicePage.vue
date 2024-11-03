@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { onBeforeMount, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { z } from 'zod';
 import AirtableBase from '../../../providers/airtable';
+import { Module } from '../../../types/module';
 
 const router = useRouter();
-
-const moduleSchema = z.object({
-  name: z.string()
-});
-
-type Module = z.infer<typeof moduleSchema>;
 
 const modules = reactive<Module[]>([]);
 

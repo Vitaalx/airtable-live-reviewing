@@ -16,9 +16,9 @@ export const useUserStore = defineStore("user", {
             localStorage.setItem(PREFIX_KEY, JSON.stringify(user));
         },
         updateUser() {
-            const storedUser: SelfUser = JSON.parse(localStorage.getItem(PREFIX_KEY) || "null");
-            if (storedUser.email != this.user.email) {
-                this.user.email = storedUser.email;
+            const storedUser: SelfUser | null = JSON.parse(localStorage.getItem(PREFIX_KEY) || "");
+            if (storedUser?.email != this.user.email) {
+                this.user.email = storedUser?.email;
             }
         },
         logoutUser() {

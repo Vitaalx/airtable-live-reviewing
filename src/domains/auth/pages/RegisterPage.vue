@@ -2,19 +2,11 @@
 import { reactive } from 'vue';
 import bcrypt from 'bcryptjs';
 import AirtableBase from '../../../providers/airtable';
-import { z, ZodIssue } from 'zod';
+import { ZodIssue } from 'zod';
 import { useRouter } from 'vue-router';
+import { registrationSchema, UserRegisterDto } from '../../../types/user';
 
 const router = useRouter();
-
-const registrationSchema = z.object({
-  lastName: z.string().min(3, { message: "Le nom de famille doit contenir au minimum 3 caratères." }),
-  firstName: z.string().min(3 , { message: "Le prénom doit contenir au minimum 3 caratères." }),
-  email: z.string().email({ message: "L'adresse email est invalide." }),  
-  password: z.string().min(8, { message: "Le mot de passe doit contenir au minimum 8 caratères." })
-});
-
-type UserRegisterDto = z.infer<typeof registrationSchema>;
 
 const user = reactive<UserRegisterDto>({
   lastName: "",

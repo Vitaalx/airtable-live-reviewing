@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, reactive } from 'vue';
+import { ref, onMounted, onUnmounted, reactive, watch } from 'vue';
 import StarsAnswer from '../components/answers/StarsAnswer.vue';
 import AirtableBase from '../../../providers/airtable';
 import { useUserStore } from '../../../stores/user';
 import { useRoute } from 'vue-router';
 import { z } from 'zod';
+import { Question } from '../../../types/question';
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -20,11 +21,6 @@ const currentQuestion = ref(0);
 const isScrolling = ref(false);
 const questionRefs = ref<HTMLElement[]>([]);
 const touchStartY = ref(0);
-
-type Question = {
-  title: string,
-  id: string
-}
 
 const questionsUnanswered = reactive<Question[]>([]);
 
@@ -141,6 +137,15 @@ function handleTouchMove(event: TouchEvent) {
   }
 }
 
+watch(
+  moduleName,
+  () => {
+    questionsUnanswered.splice(0, questionsUnanswered.length);
+    getUnansweredQuestions(moduleName.value);
+  },
+  { immediate: true }
+)
+
 onMounted(() => {
   window.addEventListener('resize', updateQuestionHeights);
   window.addEventListener('wheel', (event) => requestAnimationFrame(() => handleScroll(event)));
@@ -148,8 +153,6 @@ onMounted(() => {
     touchStartY.value = event.touches[0].clientY;
   });
   window.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-  getUnansweredQuestions(moduleName.value);
 });
 
 onUnmounted(() => {
@@ -164,6 +167,7 @@ onUnmounted(() => {
 <template>
   <div class="relative overflow-hidden h-screen-nh">
     <section
+      v-if="questionsUnanswered.length > 0"
       v-for="(question, index) in questionsUnanswered"
       :key="index"
       :class="[
@@ -174,16 +178,22 @@ onUnmounted(() => {
       ref="questionRefs"
     >
       <StarsAnswer :question="question.title" :id="'question-' + index" @send="(e) => sendAnswer(e)" />
+
+      <div class="fixed bottom-[calc(50vh-22px)] right-4 flex flex-col gap-2">
+        <button @click="scrollToPreviousQuestion" class="p-2 text-white bg-gray-600 rounded-full hover:bg-gray-700">
+          ▲
+        </button>
+        <button @click="scrollToNextQuestion" class="p-2 text-white bg-gray-600 rounded-full hover:bg-gray-700">
+          ▼
+        </button>
+      </div>
     </section>
 
-    <div class="fixed bottom-[calc(50vh-22px)] right-4 flex flex-col gap-2">
-      <button @click="scrollToPreviousQuestion" class="p-2 text-white bg-gray-600 rounded-full hover:bg-gray-700">
-        ▲
-      </button>
-      <button @click="scrollToNextQuestion" class="p-2 text-white bg-gray-600 rounded-full hover:bg-gray-700">
-        ▼
-      </button>
-    </div>
+    <section v-else>
+      <div class="flex items-center justify-center h-screen text-2xl bg-gray-200 border-b border-gray-300">
+        <p>Aucune questions.</p>
+      </div>
+    </section>
   </div>
 </template>
 

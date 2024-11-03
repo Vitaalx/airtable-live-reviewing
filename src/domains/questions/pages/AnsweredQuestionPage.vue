@@ -2,15 +2,10 @@
 import { onMounted, reactive, ref } from 'vue';
 import AirtableBase from '../../../providers/airtable';
 import { useUserStore } from '../../../stores/user';
+import { AnsweredQuestion } from '../../../types/question';
 
 const userStore = useUserStore();
 const email = ref(userStore.user?.email);
-
-interface AnsweredQuestion {
-    question: string;
-    module: string;
-    professor: string;
-}
 
 const answeredQuestions = reactive<AnsweredQuestion[]>([]);
 
