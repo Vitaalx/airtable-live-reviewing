@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps<{ id: string }>();
 const rating = ref<number>(0);
+const emits = defineEmits();
+
+watch(rating, (value) => {
+  emits('send-rating', value);
+});
 
 const ratingText = computed(() => {
   switch (rating.value) {
@@ -24,7 +29,7 @@ const ratingText = computed(() => {
 
 <template>
   <form class="flex flex-col items-center">
-    <div class="flex space-x-1 relative mb-2">
+    <div class="relative flex mb-2 space-x-1">
       <template v-for="i in 5" :key="i">
         <input
           :id="`${props.id}-rating-${i}`"
@@ -35,11 +40,11 @@ const ratingText = computed(() => {
         />
         <label
           :for="`${props.id}-rating-${i}`"
-          class="cursor-pointer transform transition-transform duration-300 hover:scale-110"
+          class="transition-transform duration-300 transform cursor-pointer hover:scale-110"
           :class="{ 'text-yellow-500': rating >= i, 'text-gray-400': rating < i }"
         >
           <svg
-            class="w-8 h-8 fill-current transition duration-300"
+            class="w-8 h-8 transition duration-300 fill-current"
             viewBox="0 0 32 32"
             aria-hidden="true"
           >
@@ -49,7 +54,7 @@ const ratingText = computed(() => {
         </label>
       </template>
     </div>
-    <p v-if="rating" class="text-center text-gray-500 font-medium mt-2">
+    <p v-if="rating" class="mt-2 font-medium text-center text-gray-500">
       {{ ratingText }}
     </p>
   </form>

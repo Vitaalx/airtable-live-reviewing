@@ -1,23 +1,34 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { z } from 'zod';
+import AirtableBase from '../../../providers/airtable';
 
 const router = useRouter();
 
 const moduleSchema = z.object({
-  name: z.string(),
-  professor: z.string().email()
+  name: z.string()
 });
-  
-const modules = reactive([
-  { name: "Module 1", professor: "prof1@exemple.fr" },
-  { name: "Module 2", professor: "prof2@exemple.fr" },
-  { name: "Module 3", professor: "prof3@exemple.fr" },
-  { name: "Module 4", professor: "prof4@exemple.fr" },
-]);
 
-const selectedModule = ref(modules[0].name);
+type Module = z.infer<typeof moduleSchema>;
+
+const modules = reactive<Module[]>([]);
+
+const selectedModule = ref("");
+
+async function getModules() {
+  try {
+    const records = await AirtableBase("Modules").select().all();
+
+    modules.splice(0, modules.length, ...records.map(record => ({
+      name: record.get('Name') as string
+    })));
+    selectedModule.value = modules[0].name;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des modules:', error);
+    throw error;
+  }
+}
 
 async function validate() {
   const module = modules.find(module => module.name === selectedModule.value);
@@ -28,6 +39,10 @@ async function validate() {
 
   router.push({ path: `/unanswered-questions/${module.name}` });
 }
+
+onBeforeMount(() => {
+  getModules();
+});
 </script>
 
 <template>

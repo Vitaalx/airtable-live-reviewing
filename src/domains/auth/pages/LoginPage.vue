@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import bcrypt from 'bcryptjs';
-import { z, ZodIssue } from 'zod';
+import { ZodIssue } from 'zod';
 import AirtableBase from '../../../providers/airtable';
 import { generateToken } from '../../../utils/token';
 import { useRouter } from 'vue-router';
+import { loginSchema, UserLoginDto } from '../../../types/user';
+import { useUserStore } from '../../../stores/user';
 
 const router = useRouter();
-
-const loginSchema = z.object({
-  email: z.string().email({ message: "L'adresse email est invalide." }),
-  password: z.string().min(8, { message: "Le mot de passe doit contenir au minimum 8 caratères." })
-});
-
-type UserLoginDto = z.infer<typeof loginSchema>;
 
 const user = reactive<UserLoginDto>({
   email: "",
   password: ""
 });
+
+const userStore = useUserStore();
 
 const zodFormErrors = reactive<ZodIssue[]>([]);
 const loginFormErrors = ref("");
@@ -50,6 +47,10 @@ async function login() {
         { email: user.email }
       );
       localStorage.setItem("app-token", token);
+      userStore.setUser({
+        email: record.get("Email") as string,
+        id: record.id
+      });
       router.push({ path: "/module-choice" });
     } else {
       loginFormErrors.value = "Le mot de passe est incorrect";

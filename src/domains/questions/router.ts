@@ -8,5 +8,9 @@ export default (): RouteRecordRaw[] => [
     {
         path: "/unanswered-questions/:moduleName",
         component: () => import("./pages/QuestionsPage.vue"),
+    },
+    {
+        path: "/answered-questions",
+        component: () => import("./pages/AnsweredQuestionPage.vue"),
     }
 ];
