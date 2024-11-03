@@ -90,6 +90,7 @@ async function sendAnswer(rating: number) {
             }
           }
       );
+      scrollToNextQuestion();
       refreshQuestions(questionsUnanswered[currentQuestion.value].id);
   } catch (error) {
     console.error('Erreur lors de l\'envoi de la réponse:', error);
@@ -182,7 +183,7 @@ onUnmounted(() => {
     >
       <StarsAnswer :question="question.title" :id="'question-' + index" @send="(e) => sendAnswer(e)" />
 
-      <div class="fixed bottom-[calc(50vh-22px)] right-4 flex flex-col gap-2">
+      <div class="fixed bottom-[calc(50vh-6rem-22px)] right-4 flex flex-col gap-2">
         <button @click="scrollToPreviousQuestion" class="p-2 text-white bg-gray-600 rounded-full hover:bg-gray-700">
           ▲
         </button>

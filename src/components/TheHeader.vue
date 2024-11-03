@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import { useUserStore } from '../stores/user';
+import { useRouter, RouterLink } from 'vue-router';
+
+const userStore = useUserStore();
+const userEmail = userStore.user?.email;
+const router = useRouter();
+
+function logout() {
+  userStore.logoutUser();
+  router.push({ path: "/login" });
+}
 </script>
 
 <template>
@@ -8,9 +19,14 @@
         <RouterLink to="/" class="text-2xl font-bold">airtable-live-reviewing</RouterLink> 
         
         <div class="flex items-center gap-4">
-          <RouterLink to="/login" class="text-lg hover:text-blue-500">Login</RouterLink>
+          <template v-if="!userEmail">
+            <RouterLink to="/login" class="text-lg hover:text-blue-500">Se connecter</RouterLink>
           
-          <RouterLink to="/register" class="text-lg hover:text-blue-500">Register</RouterLink>
+            <RouterLink to="/register" class="text-lg hover:text-blue-500">S'inscrire</RouterLink>
+          </template>
+          <template v-else>  
+            <span @click="logout()" class="text-lg hover:text-blue-500 hover:cursor-pointer">Se déconnecter</span>
+          </template>
         </div>
       </div>
     </div>

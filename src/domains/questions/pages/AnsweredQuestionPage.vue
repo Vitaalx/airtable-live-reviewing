@@ -52,14 +52,26 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <div class="flex flex-col items-center">
-        <h1>Questions répondues</h1>
-        <ul>
-            <li v-for="answeredQuestion in answeredQuestions" :key="answeredQuestion.question">
-                <p>Titre de la question : {{ answeredQuestion.question }}</p>
-                <p>Nom du module : {{ answeredQuestion.module }}</p>
-                <p>Professeur : {{ answeredQuestion.professor }}</p>
-            </li>
-        </ul>
-    </div>
+    <section class="container flex justify-center h-screen-nh">
+        <div class="items-center justify-center py-12">
+            <div class="w-full bg-white rounded-lg shadow-lg p-8 m-4">
+                <h1 class="text-2xl font-semibold text-center mb-6">Questions répondues</h1>
+                <ul class="divide-y divide-gray-200">
+                    <li v-for="answeredQuestion in answeredQuestions" :key="answeredQuestion.question">
+                        <div class="flex items center justify-between">
+                            <div class="flex items center">
+                                <div class="p-4 flex flex-col">
+                                    <p class="text-lg font-semibold">{{ answeredQuestion.question }}</p>
+                                    <p class="text-sm text-gray-500">Module : {{ answeredQuestion.module }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items center">
+                                <p class="text-sm text-gray-500">Professeur : {{ answeredQuestion.professor }}</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
 </template>

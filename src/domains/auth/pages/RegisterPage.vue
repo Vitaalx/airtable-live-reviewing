@@ -128,6 +128,8 @@ async function register() {
             
             <button @click="register" class="w-full p-2 text-white bg-blue-500 rounded-md">S'inscrire</button>
           </div>
+
+          <RouterLink to="/login" class="text-center text-blue-500 hover:underline">Déjà inscrit ? Connectez-vous</RouterLink>
         </div>
       </div>
     </section>

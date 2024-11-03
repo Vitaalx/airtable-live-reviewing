@@ -99,6 +99,8 @@ async function login() {
             <button @click="login" class="w-full p-2 text-white bg-blue-500 rounded-md">Se connecter</button>
             <span class="text-sm text-red-500" v-if="loginFormErrors.length > 0">{{ loginFormErrors }}</span>
           </div>
+          
+          <RouterLink to="/register" class="text-center text-blue-500 hover:underline">Pas encore inscrit ? Créez un compte</RouterLink>
         </div>
       </div>
     </section>
