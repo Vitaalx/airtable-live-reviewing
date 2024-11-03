@@ -6,8 +6,8 @@ import { createPinia } from 'pinia';
 import { useUserStore } from './stores/user';
 
 createApp(App)
-    .use(router)
     .use(createPinia())
+    .use(router)
     .mount('#app')
 
 

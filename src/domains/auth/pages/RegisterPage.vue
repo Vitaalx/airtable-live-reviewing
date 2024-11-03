@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
-import bcrypt from 'bcryptjs';
-import AirtableBase from '../../../providers/airtable';
-import { ZodIssue } from 'zod';
 import { useRouter } from 'vue-router';
-import { registrationSchema, UserRegisterDto } from '../../../types/user';
+import bcrypt from 'bcryptjs';
+import { ZodIssue } from 'zod';
+
+import AirtableBase from '@/providers/airtable';
+import { registrationSchema, UserRegisterDto } from '@/types/user';
 
 const router = useRouter();
 

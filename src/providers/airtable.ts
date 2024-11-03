@@ -1,5 +1,6 @@
-import Airtable  from 'airtable';
-import { AppConfig } from '../config/config';
+import * as Airtable from 'airtable';
+
+import { AppConfig } from '@/config/config';
 
 const { AirtableApiKey, AirtableRequestTimeoutInMs, AirtableBaseId } = AppConfig;
 

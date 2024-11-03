@@ -1,0 +1,14 @@
+{
+    "include": ["src/**/*", "src/**/*.vue", "*.d.ts"],
+    "compilerOptions": {
+      "module": "esnext",
+      "moduleResolution": "node",
+      "composite": true,
+      "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+  
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["./src/*"]
+      }
+    }
+  }

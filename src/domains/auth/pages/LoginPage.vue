@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import bcrypt from 'bcryptjs';
 import { ZodIssue } from 'zod';
-import AirtableBase from '../../../providers/airtable';
-import { generateToken } from '../../../utils/token';
-import { useRouter } from 'vue-router';
-import { loginSchema, UserLoginDto } from '../../../types/user';
-import { useUserStore } from '../../../stores/user';
+
+import AirtableBase from '@/providers/airtable';
+import { useUserStore } from '@/stores/user';
+import { loginSchema, UserLoginDto } from '@/types/user';
+import { generateToken } from '@/utils/token';
 
 const router = useRouter();
 
@@ -35,7 +36,10 @@ async function login() {
 
   if (records.length > 0) {
     const record = records[0];
+    const userId = record.id as string;
+    const userEmail = record.get("Email") as string;
     const hashedPassword = record.get("Password") as string;
+    
     if (!hashedPassword) {
       loginFormErrors.value = "Le mot de passe est incorrect";
       return;
@@ -46,11 +50,15 @@ async function login() {
       const token = await generateToken(
         { email: user.email }
       );
-      localStorage.setItem("app-token", token);
-      userStore.setUser({
-        email: record.get("Email") as string,
-        id: record.id
-      });
+
+      userStore.setAccessToken(token);
+      userStore.setUser(
+        {
+          id: userId,
+          email: userEmail 
+        }
+      );
+
       router.push({ path: "/module-choice" });
     } else {
       loginFormErrors.value = "Le mot de passe est incorrect";

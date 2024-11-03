@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AirtableBase from '../../../providers/airtable';
-import { Module } from '../../../types/module';
+
+import AirtableBase from '@/providers/airtable';
+import { Module } from '@/types/module';
 
 const router = useRouter();
 

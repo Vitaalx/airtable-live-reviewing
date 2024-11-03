@@ -15,7 +15,7 @@ export const registrationSchema = z.object({
 export type UserLoginDto = z.infer<typeof loginSchema>;
 
 export type SelfUser = {
-    email?: string;
+    email: string;
     id: string;
 }
 

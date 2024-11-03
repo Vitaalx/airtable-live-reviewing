@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, reactive, watch } from 'vue';
-import StarsAnswer from '../components/answers/StarsAnswer.vue';
-import AirtableBase from '../../../providers/airtable';
-import { useUserStore } from '../../../stores/user';
 import { useRoute } from 'vue-router';
 import { z } from 'zod';
-import { Question } from '../../../types/question';
+
+import StarsAnswer from '../components/answers/StarsAnswer.vue';
+import AirtableBase from '@/providers/airtable';
+import { Question } from '@/types/question';
+import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -37,6 +38,8 @@ async function getUnansweredQuestions(moduleName: string) {
     }
 
     const userEmail = userStore.user?.email;
+
+    console.log('userEmail:', userEmail);
 
     if (!userEmail) {
       return;
