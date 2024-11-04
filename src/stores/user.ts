@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { SelfUser } from "@/types/user";
 
@@ -10,14 +10,13 @@ export const useUserStore = defineStore(
     "user", 
     {
         state: () => ({
-            user: ref<SelfUser | null>(JSON.parse(localStorage.getItem(KEY_USER_LOCAL_STORAGE) || "null")),
+            user: ref<null | SelfUser>(JSON.parse(localStorage.getItem(KEY_USER_LOCAL_STORAGE) || "null")),
             accessToken: ref<null | string>(localStorage.getItem(KEY_ACCESS_TOKEN_LOCAL_STORAGE)),
-            isAuthenticated: ref<boolean>(false),
+            isAuthenticated: ref<boolean>(!!localStorage.getItem(KEY_ACCESS_TOKEN_LOCAL_STORAGE)),
         }),
         actions: {
             setUser(user: SelfUser) {
                 this.user = user;
-                this.isAuthenticated = true;
                 localStorage.setItem(KEY_USER_LOCAL_STORAGE, JSON.stringify(user));
             },
             updateUser() {
@@ -26,11 +25,12 @@ export const useUserStore = defineStore(
                 if (storedUser?.email != this.user?.email) {
                     this.user.email = storedUser?.email;
                 }
+                this.isAuthenticated = !!localStorage.getItem(KEY_ACCESS_TOKEN_LOCAL_STORAGE);
             },
             logoutUser() {
                 this.user = null;
-                this.isAuthenticated = false;
                 localStorage.removeItem(KEY_USER_LOCAL_STORAGE);
+                this.setAccessToken(null);
             },
             setAccessToken(newAccessToken: string | null) {
                 if (newAccessToken) {
